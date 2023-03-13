@@ -30,18 +30,18 @@ class server(Thread):
         self.CTLock=False
 
     def broadcast(self, Str):
-    	# Send a command to all connected clients 
+        # Send a command to all connected clients 
         for x in CThreads:
             CThreads[x].send(Str)
 
     def broadcastMSG(self, From, UID, Mesg):
-    	# Send a message to all connected clients 
+        # Send a message to all connected clients 
         for x in CThreads:
             if not str(x)==str(UID):
                 CThreads[x].MESG(str(UID),Mesg)
 
     def UpdateCList(self):
-    	# Updates list of connected clients 
+        # Updates list of connected clients 
         self.CList={}
         for x in CThreads:
             self.CList[x]={}
@@ -49,7 +49,7 @@ class server(Thread):
             self.CList[x]["Uname"]=CThreads[x].Uname
 
     def UpdateCThreads(self):
-    	# Updates list of connected client threads, checks if any dead threads needs to be cleaned up 
+        # Updates list of connected client threads, checks if any dead threads needs to be cleaned up 
         if self.CTLock==False:
             self.CTLock=True
             DeadThreads={}
@@ -64,11 +64,11 @@ class server(Thread):
             self.CTLock=False
 
     def Crash(self):
-    	# Tests the exception handler
+        # Tests the exception handler
         raise Exception("crashtest")
 
     def run(self):
-    	# Mainloop, accepts connections and spawns client threads. 
+        # Mainloop, accepts connections and spawns client threads. 
         global Conn, CThreads, Error, LastConn
         print(str(self))
         while self.alive:
@@ -109,7 +109,7 @@ class client(Thread):
         self.state="START"
 
     def send(self, msg):
-    	# Sends a command/message to the client
+        # Sends a command/message to the client
         try:
             self.channel.send(bytes(msg, "ascii"))
         except socket.error as e:
@@ -119,7 +119,7 @@ class client(Thread):
             self.alive=False
 
     def ping(self):
-    	# Sends the text "PING" to the client, and counts the time it takes before receiving one back, see self.pong under run(self). 
+        # Sends the text "PING" to the client, and counts the time it takes before receiving one back, see self.pong under run(self). 
         try:
             self.channel.send(bytes("PING", "ascii"))
             self.pong=None
@@ -142,7 +142,7 @@ class client(Thread):
         self.send("MESG"+MsgSep+str(uid)+MsgSep+msg)
 
     def run(self):
-    	# Main functions for the client
+        # Main functions for the client
         global Error, BError
 
         # Try to send the client it's UID number when it initially connects. 

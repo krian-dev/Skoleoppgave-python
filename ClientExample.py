@@ -1,4 +1,4 @@
-#Python Client DGRam
+#Python Client Example
 import socket
 from threading import Thread
 mySocket = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
