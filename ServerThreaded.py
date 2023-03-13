@@ -20,7 +20,7 @@ server_socket=None
 
 #________________________________________________________________________________________________________________
 #SERVERTHREAD: UID 0
-# This class consists of the thread used for the server. This will listen for all new connections and spawn new "Client-threads" for each one that connects. 
+# This class consists of the thread used for the server. This will listen for all new connections and spawn new "Client-threads" for each one that connects.
 class server(Thread):
     def __init__(self, ip=ip, port=port):
         Thread.__init__(self)
@@ -49,7 +49,7 @@ class server(Thread):
             self.CList[x]["Uname"]=CThreads[x].Uname
 
     def UpdateCThreads(self):
-        # Updates list of connected client threads, checks if any dead threads needs to be cleaned up 
+        # Updates list of connected client threads, checks if any dead threads needs to be cleaned up
         if self.CTLock==False:
             self.CTLock=True
             DeadThreads={}
@@ -98,7 +98,7 @@ class server(Thread):
 
 #________________________________________________________________________________________________________________
 #CLIENTTHREAD: UID1-inf
-# This class consists of the thread used for a client. This keeps track of the client state and handles communication to and from it. 
+# This class consists of the thread used for a client. This keeps track of the client state and handles communication to and from it.
 class client(Thread):
     def __init__ (self, channel,UID):
         Thread.__init__(self)
@@ -119,7 +119,7 @@ class client(Thread):
             self.alive=False
 
     def ping(self):
-        # Sends the text "PING" to the client, and counts the time it takes before receiving one back, see self.pong under run(self). 
+        # Sends the text "PING" to the client, and counts the time it takes before receiving one back, see self.pong under run(self).
         try:
             self.channel.send(bytes("PING", "ascii"))
             self.pong=None
@@ -145,7 +145,7 @@ class client(Thread):
         # Main functions for the client
         global Error, BError
 
-        # Try to send the client it's UID number when it initially connects. 
+        # Try to send the client it's UID number when it initially connects.
         # This runs at once when a client has connected
         try:
             self.send("UID"+MsgSep+str(self.UID))
