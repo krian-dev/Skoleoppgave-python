@@ -7,6 +7,9 @@ Conn=0
 CThreads={}
 Error=""
 BError=""
+
+# The seperator used for commands sent
+# Eg. if MsgSep = "|", then the text that you must send for a username change will be "UNAME|My name"
 MsgSep="|"
 
 ip="localhost"
@@ -254,11 +257,11 @@ while Malive:
                 print("Disconnecting Client: "+CThreads[x].name)
                 CThreads[x].channel.close()
                 CThreads[x].alive=False
-            print("Killing server manager")
-            #ServerManager.alive=False
+
             print("Killing server thread: "+ServerListener.name)
             ServerListener.alive=False
             server_socket.close()
+
             #Startup process
             print("Booting up..")
             Bootup()
@@ -308,13 +311,12 @@ while Malive:
                 print("Disconnecting Client: "+CThreads[x].name)
                 CThreads[x].channel.close()
                 CThreads[x].alive=False
-            print("Killing server manager")
-            #ServerManager.alive=False
+
             print("Killing server thread: "+ServerListener.name)
             ServerListener.alive=False
             server_socket.close()
+
             print("Killing mainloop")
-            os.system("PAUSE")
             Malive=False
 
         elif Command=="lasterror":
