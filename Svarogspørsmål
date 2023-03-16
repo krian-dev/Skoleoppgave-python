@@ -1,0 +1,13 @@
+svar =  [{"Bare i bølger" : 0, 
+            "Nei" : 1, 
+            "Ja" : 0, 
+            "Alltid hvis den ikke er i bølger" : 0,
+            }, {"Svaralternativ1" : 0, 
+            "Svaralternativ2" : 0, 
+            "Svaratternativ3" : 1, 
+            "Svaratternativ4" : 0,
+            }, {"Svaralternativ1" : 0, 
+            "Svaralternativ2" : 0, 
+            "Svaratternativ3" : 0, 
+            "Svaratternativ4" : 1,
+            },  ]
