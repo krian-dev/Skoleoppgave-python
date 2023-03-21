@@ -215,6 +215,154 @@ Denne siste delen sier at serveren skal skrive hvem som koblet seg til å svare 
 
 # 23.02.2023 Vinterferie!
 <br />
-<br />[Programmeringslogg.md](https://github.com/krian-dev/Skoleoppgave-python/files/10995050/Programmeringslogg.md)
+<br />
+## 1.03.2023 hjemme
+Nå som jeg visste hvordan ting funket, så tok jeg en mal fra broren min som han lagde for lenge siden. Dette var bare et program han hadde lagd en gang i tiden, som var en server med MultiThreading. Jeg kan derfor siden han allerede har satt opp rammeverket bygge koden min rundt dette. Dette får det kanskje til å høres ut som om jeg gjorde lite, men jeg gjorde veldig mye, spesielt i forhold til det jeg kunne fra før. Du kan se spesifikke endringer her <a href ="https://github.com/krian-dev/Skoleoppgave-python"> Github link til prosjektet" </a> Jeg lagde nå en server som spurte om spørsmål uten en klient så du kunne bruke telnet eller en annen måte å lese ting over internett på til å svare tilbake med answer|a og answer|b. Gurennen til at du måtte skrive dette er siden jeg la funksjonen slik
 
-## 30.02.2023 på skole
+```py
+elif command=="spm":
+    if self.runde == len(spørsmål):
+        for x in CThreads:
+            self.send((CThreads[x].Uname + ": " + str(CThreads[x].poeng)+'\n'))
+            if self.ferdig == 0:
+                time.sleep(1)
+                self.send("Ferdig")
+                self.ferdig = 1
+    else:
+        self.ferdig = 0
+        self.send(spørsmål[self.runde]+"\n")
+        for i in range(len(svar[self.runde])):
+            print(i)
+            #self.send (("%s) %s" % (string.ascii_uppercase[i], list(svar.keys().encode('UTF-8')[i]))))
+            self.send(string.ascii_uppercase[i] + ") " + list(svar[self.runde].keys())[i] + "\n")
+        self.send('Hva tror du?'+"\n")
+
+elif command=="answer":
+    if self.ferdig == 0:
+        svaret_ditt = datasplit[1].upper()
+        svaret_ditt = (string.ascii_uppercase.index(svaret_ditt))
+        svaret_ditt = list(svar[self.runde].keys())[svaret_ditt]
+        
+                        
+        if svar[self.runde][svaret_ditt] == 1:
+            self.send (" Bra jobba, du fikk rett"+'\n')
+            self.poeng = self.poeng + 1
+            self.runde=self.runde+1
+        else:
+            self.send (" Du fikk feil"+'\n')
+            self.runde=self.runde+1
+```
+
+Og siden message seperatoren er | som ble satt på starten måtte du splitte kommandoen og argumentene du skulle sende med en "|". Jeg må bruke self.x før hver variabel som er spesifikk for den klienten. Jeg skal bare kjapt gå over hva disse 2 kommandoen gjør nå:
+
+```py 
+elif command=="spm":
+    if self.runde == len(spørsmål):
+        for x in CThreads:
+            self.send((CThreads[x].Uname + ": " + str(CThreads[x].poeng)+'\n'))
+            if self.ferdig == 0:
+                time.sleep(1)
+                self.send("Ferdig")
+                self.ferdig = 1
+```
+Denne delen finner ut om du er ferdig ved å se på at hvis runden er det samme som lengden spørsmål skal den for antall Threads koblet til sende en navnet ditt og poeng og sette **ferdig** til 1 og sende ferdig til klienten. Jeg måtte ha en **time.sleep** her selv om det ser veldig uproffesjonelt ut siden jeg hadde en bug hvor server ville sende flere ting samtidig slik at klienten mistet rekkefølge siden pakke oppdateringen kræsjet litt.
+
+```py
+    else:
+        self.ferdig = 0
+        self.send(spørsmål[self.runde]+"\n")
+        for i in range(len(svar[self.runde])):
+            print(i)
+            #self.send (("%s) %s" % (string.ascii_uppercase[i], list(svar.keys().encode('UTF-8')[i]))))
+            self.send(string.ascii_uppercase[i] + ") " + list(svar[self.runde].keys())[i] + "\n")
+        self.send('Hva tror du?'+"\n")
+```
+Denne delen sier bare at dersom du ikke er ferdig skal den sende spørsmålet som tilsvarer antall runder i tall. Den sender også svar alternativene til spørsmålet.
+Dette er altså delene av programmet som tar seg av å sende spørsmål og svar-alternativer dersom du ikke er ferdig og den delen som finner ut at du er ferdig. 
+
+Neste del er hvordan den hånterer svarene klienten sender tilbake. 
+
+```py
+elif command=="answer":
+    if self.ferdig == 0:
+        svaret_ditt = datasplit[1].upper()
+        svaret_ditt = (string.ascii_uppercase.index(svaret_ditt))
+        svaret_ditt = list(svar[self.runde].keys())[svaret_ditt]
+        
+                        
+        if svar[self.runde][svaret_ditt] == 1:
+            self.send (" Bra jobba, du fikk rett"+'\n')
+            self.poeng = self.poeng + 1
+            self.runde=self.runde+1
+        else:
+            self.send (" Du fikk feil"+'\n')
+            self.runde=self.runde+1
+```
+Denne delen er sier bare at så lenge du ikke er ferdig skal den motta datameldingen, konvertere alt til **uppercase** slik at den klarer å lese responsen og deretter gjør den det samme som jeg forklarte i den lokale versjonen av spillet tidligere. 
+
+## 8.02.2023 på skole
+Her var her jeg begynte å skrive loggen, siden jeg hadde lyst til å imponere deg som lærer og jeg hadde lyst til å skrive det med en syntax siden det ofte er lettere og raskere enn å klunke med word. Du kan åpne Programmeringslogg.md i notebok for å lese syntaxen, ellers er det denne loggen som er PDF-filen vedlagt.
+
+## 15.02.2023 på skole
+Her la jeg til de siste touchesa på spillet, å lagde en liste med spørsmål som jeg la til. 
+
+## 15.02.2023 hjemme
+Her var da jeg lagde klienten, slik at du slapp å skrive "spm|" og "answer|b" for å sende kommandoene. Jeg tok også "inspirasjon" fra broren min sin klient her, men gjorde ganske store endringer. Den er nesten ugjenkjennelig. Her er hver linje forklart veldig fort.
+
+```py
+import socket
+from threading import Thread
+mySocket = socket.socket ( socket.AF_INET, socket.SOCK_STREAM )
+mySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+print("Connecting...")
+
+MsgSep="|"
+Navn = 0
+ferdig = 0
+
+try:
+    print(mySocket.connect(("localhost",27000)))
+except socket.error as e:
+    print(e)
+    raw_input()
+print("Connected!")
+alive=True
+
+class listen(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+```
+
+Denne begynnelsen her bare importerer nødvendige biblioteker og kobler seg til localhost på port 27000. Den setter også alive til True som egentlig bare betyr at den kjører. Den setter også seg hver thread på listen og setter hver thread som seg selv.
+
+```py
+def run(self):
+    global Navn
+    global ferdig
+    while alive:
+        recv=mySocket.recv(1024).decode("UTF-8")
+        datasplit=recv.rstrip().split(MsgSep)
+        command=datasplit[0]
+        if command=="PING":
+            print("Ping recived, responding...")
+            mySocket.send(b"PING")
+        elif command=="UNAME":
+            print("Spiller joina: "+ datasplit[2]+'\n')
+            Navn = 2
+        elif command =="UID":
+            print()
+        elif command=="Ferdig":
+            ferdig=1
+            print("Du blei ferdig, bra jobbat")
+        else:
+            print(recv)
+    if not alive:
+        print("Listen is dead")
+
+TListen=listen()
+TListen.start()
+```
+Den delen her er bare den som skal ta alt den mottar, oppdatere seg med pakker på 1024 bytes og lese det i UTF-8. Den legger også til noen kommandoer som PING, UNAME, UID, Ferdig. Som alle er hva den skal svare til serveren eller seg selv dersom den mottar en melding fra serveren. 
+
+```py
+
